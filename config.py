@@ -2,5 +2,7 @@ import os
 
 
 class DefaultConfig(object):
-    PORT = os.getenv('PORT', '55882')
+    APP_ID = os.getenv("MicrosoftAppId", "")
+    APP_PASSWORD = os.getenv("MicrosoftAppPassword", "")
+    PORT = os.getenv('PORT', '5000')
     HOST = os.getenv('HOST', 'localhost')
