@@ -51,10 +51,24 @@ async def on_error(self, context: TurnContext, error: Exception):
 ADAPTER.on_turn_error = on_error
 
 
-# Listen for incoming requests on /africa-capitals/messages
+# Listen for incoming requests on /api/messages
 async def messages(request: Request) -> Response:
     # Bot message handler.
-    pass
+    if "application/json" in request.headers["Content-Type"]:
+        body = await request.json()
+    else:
+        return Response(status=415)
+
+    activity = Activity().deserialize(body)
+    auth_header = request.headers["Authorization"] if "Authorization" in request.headers else ""
+
+    try:
+        response = await ADAPTER.process_activity(activity, auth_header, BOT.on_turn)
+        if response:
+            return json_response(data=response.body, status=response.status)
+        return Response(status=201)
+    except Exception as exception:
+        raise exception
 
 
 app = web.Application()
