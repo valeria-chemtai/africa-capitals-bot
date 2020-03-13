@@ -1,18 +1,20 @@
 from aiohttp import web
-from aiohttp.web import Response
+from aiohttp.web import Request, Response
 
+from bot import AfricaCapitalBot
 from config import DefaultConfig
 
 
+BOT = AfricaCapitalBot()
 CONFIG = DefaultConfig()
 
 
-async def root(request):
+async def root(request: Request) -> Response:
     return Response(text='Welcome to African Nations Capitals bot')
 
 
 app = web.Application()
-app.router.add_get('/', root)
+app.router.add_get('/api', root)
 
 
 if __name__ == '__main__':
